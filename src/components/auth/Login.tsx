@@ -6,8 +6,7 @@ import {
   Typography,
   Container,
   Paper,
-  Alert,
-  Link,
+  Alert
 } from '@mui/material';
 import { useNavigate } from 'react-router-dom';
 import { authService } from '../../services/auth.service';
@@ -114,16 +113,6 @@ const Login: React.FC = () => {
             >
               {loading ? 'Signing in...' : 'SIGN IN'}
             </Button>
-            <Box sx={{ mt: 2, textAlign: 'center' }}>
-              <Link
-                component="button"
-                variant="body2"
-                onClick={() => navigate('/register')}
-                sx={{ color: 'primary.main', fontWeight: 500 }}
-              >
-                DON'T HAVE AN ACCOUNT? SIGN UP
-              </Link>
-            </Box>
           </Box>
         </Paper>
       </Container>

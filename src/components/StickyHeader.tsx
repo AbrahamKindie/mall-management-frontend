@@ -1,8 +1,24 @@
 import React from 'react';
 import { Input, Avatar, Badge, Dropdown, Menu } from 'antd';
-import { BellOutlined, UserOutlined } from '@ant-design/icons';
+import { BellOutlined, UserOutlined, SettingOutlined, LogoutOutlined } from '@ant-design/icons';
+import { useNavigate } from 'react-router-dom';
 
 const StickyHeader: React.FC = () => {
+  const navigate = useNavigate();
+
+  const menu = (
+    <Menu style={{ minWidth: 200, borderRadius: 16, boxShadow: '0 4px 24px rgba(0,0,0,0.08)', padding: 12 }}>
+      <Menu.Item key="account" style={{ padding: '16px 24px', fontSize: 16, display: 'flex', alignItems: 'center', gap: 12 }} onClick={() => navigate('/settings')}>
+        <SettingOutlined style={{ fontSize: 18 }} />
+        Account Settings
+      </Menu.Item>
+      <Menu.Item key="logout" style={{ padding: '16px 24px', fontSize: 16, display: 'flex', alignItems: 'center', gap: 12 }}>
+        <LogoutOutlined style={{ fontSize: 18 }} />
+        Logout
+      </Menu.Item>
+    </Menu>
+  );
+
   return (
     <div
       style={{
@@ -30,19 +46,12 @@ const StickyHeader: React.FC = () => {
         <Badge count={0} size="small">
           <BellOutlined style={{ fontSize: 24, color: '#888' }} />
         </Badge>
-        <Dropdown
-          overlay={
-            <Menu>
-              <Menu.Item key="profile">Profile</Menu.Item>
-              <Menu.Item key="logout">Logout</Menu.Item>
-            </Menu>
-          }
-        >
-          <div style={{ display: 'flex', alignItems: 'center', cursor: 'pointer' }}>
-            <Avatar src="/avatar.png" icon={<UserOutlined />} />
-            <div style={{ marginLeft: 8, textAlign: 'left' }}>
-              <div style={{ fontWeight: 600 }}>User</div>
-              <div style={{ fontSize: 12, color: '#888' }}>admin@gmail.com</div>
+        <Dropdown overlay={menu} trigger={["click"]} placement="bottomRight" overlayStyle={{ borderRadius: 16, boxShadow: '0 4px 24px rgba(0,0,0,0.08)' }}>
+          <div style={{ display: 'flex', alignItems: 'center', cursor: 'pointer', background: '#fff', borderRadius: 16, padding: '6px 16px', boxShadow: '0 2px 8px rgba(0,0,0,0.04)' }}>
+            <Avatar src="/avatar.png" icon={<UserOutlined />} size={48} />
+            <div style={{ marginLeft: 12, textAlign: 'left' }}>
+              <div style={{ fontWeight: 600, fontSize: 16 }}>User</div>
+              <div style={{ fontSize: 13, color: '#888' }}>admin@gmail.com</div>
             </div>
           </div>
         </Dropdown>

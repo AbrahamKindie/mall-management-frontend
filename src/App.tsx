@@ -20,6 +20,8 @@ import BasicReports from './components/reports/BasicReports';
 import Sidebar from './components/Sidebar';
 import RoleAndPermission from './components/role/RoleAndPermission';
 import StickyHeader from './components/StickyHeader';
+import AccountSettings from './pages/AccountSettings';
+import ChangePassword from './pages/ChangePassword';
 
 const { Header, Content, Sider } = Layout;
 
@@ -122,6 +124,16 @@ const AppLayout: React.FC = () => {
               <Route path="/roles" element={
                 <ProtectedRoute>
                   <RoleAndPermission />
+                </ProtectedRoute>
+              } />
+              <Route path="/settings" element={
+                <ProtectedRoute>
+                  <AccountSettings />
+                </ProtectedRoute>
+              } />
+              <Route path="/settings/change-password" element={
+                <ProtectedRoute>
+                  <ChangePassword />
                 </ProtectedRoute>
               } />
               <Route path="/" element={<Navigate to="/dashboard" />} />
