@@ -70,6 +70,8 @@ const ForgotPassword: React.FC = () => {
         alignItems: 'center',
         justifyContent: 'center',
         background: '#fff',
+        padding: '0 24px',
+        fontFamily: 'sans-serif',
       }}>
         <div style={{ width: 400, maxWidth: '90%', margin: '0 auto' }}>
           <Title level={2} style={{ fontWeight: 700, marginBottom: 0 }}>Reset Password</Title>
@@ -102,6 +104,8 @@ const ForgotPassword: React.FC = () => {
       alignItems: 'center',
       justifyContent: 'center',
       background: '#fff',
+      padding: '0 24px',
+      fontFamily: 'sans-serif',
     }}>
       <div style={{ width: 400, maxWidth: '90%', margin: '0 auto' }}>
         <Title level={2} style={{ fontWeight: 700, marginBottom: 0 }}>Forgot Password</Title>
