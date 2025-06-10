@@ -18,15 +18,12 @@ export interface AuthResponse {
     id: number;
     email: string;
     role: string;
-    profile: {
-      firstName?: string;
-      lastName?: string;
-      phone?: string;
-      address?: string;
-    };
   };
   token: string;
 }
+
+const TOKEN_KEY = 'auth_token';
+const USER_KEY = 'auth_user';
 
 export const authService = {
   login: async (data: LoginData): Promise<AuthResponse> => {
@@ -40,21 +37,62 @@ export const authService = {
   },
 
   logout() {
-    localStorage.removeItem('token');
-    localStorage.removeItem('user');
+    localStorage.removeItem(TOKEN_KEY);
+    localStorage.removeItem(USER_KEY);
   },
 
   getToken(): string | null {
-    return localStorage.getItem('token');
+    const token = localStorage.getItem(TOKEN_KEY);
+    if (!token) return null;
+    
+    try {
+      // Check if token is expired
+      const payload = JSON.parse(atob(token.split('.')[1]));
+      const expirationTime = payload.exp * 1000; // Convert to milliseconds
+      const currentTime = Date.now();
+      
+      if (expirationTime < currentTime) {
+        this.logout();
+        return null;
+      }
+      
+      return token;
+    } catch (error) {
+      console.error('Error validating token:', error);
+      this.logout();
+      return null;
+    }
   },
 
   getUser() {
-    const user = localStorage.getItem('user');
-    return user ? JSON.parse(user) : null;
+    try {
+      const user = localStorage.getItem(USER_KEY);
+      return user ? JSON.parse(user) : null;
+    } catch (error) {
+      console.error('Error getting user:', error);
+      return null;
+    }
   },
 
   setAuthData(data: AuthResponse) {
-    localStorage.setItem('token', data.token);
-    localStorage.setItem('user', JSON.stringify(data.user));
+    if (!data.token || !data.user) {
+      throw new Error('Invalid auth data');
+    }
+    try {
+      localStorage.setItem(TOKEN_KEY, data.token);
+      localStorage.setItem(USER_KEY, JSON.stringify(data.user));
+    } catch (error) {
+      console.error('Error setting auth data:', error);
+      throw error;
+    }
   },
+
+  isAuthenticated(): boolean {
+    return !!this.getToken();
+  },
+
+  validateToken(): boolean {
+    const token = this.getToken();
+    return !!token;
+  }
 }; 

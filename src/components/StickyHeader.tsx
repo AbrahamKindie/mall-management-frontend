@@ -2,9 +2,11 @@ import React from 'react';
 import { Input, Avatar, Badge, Dropdown, Menu } from 'antd';
 import { BellOutlined, UserOutlined, SettingOutlined, LogoutOutlined } from '@ant-design/icons';
 import { useNavigate } from 'react-router-dom';
+import { useAuth } from '../contexts/AuthContext';
 
 const StickyHeader: React.FC = () => {
   const navigate = useNavigate();
+  const { logout } = useAuth();
 
   const menu = (
     <Menu style={{ minWidth: 200, borderRadius: 16, boxShadow: '0 4px 24px rgba(0,0,0,0.08)', padding: 12 }}>
@@ -12,7 +14,11 @@ const StickyHeader: React.FC = () => {
         <SettingOutlined style={{ fontSize: 18 }} />
         Account Settings
       </Menu.Item>
-      <Menu.Item key="logout" style={{ padding: '16px 24px', fontSize: 16, display: 'flex', alignItems: 'center', gap: 12 }}>
+      <Menu.Item
+        key="logout"
+        style={{ padding: '16px 24px', fontSize: 16, display: 'flex', alignItems: 'center', gap: 12 }}
+        onClick={logout}
+      >
         <LogoutOutlined style={{ fontSize: 18 }} />
         Logout
       </Menu.Item>

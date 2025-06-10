@@ -11,7 +11,7 @@ const BasicReports: React.FC = () => {
   const [units, setUnits] = useState<Unit[]>([]);
   const [tenants, setTenants] = useState<Tenant[]>([]);
   const [floors, setFloors] = useState<Floor[]>([]);
-  const [loading, setLoading] = useState(true);
+  const [loading] = useState(false);
 
   useEffect(() => {
     Promise.all([

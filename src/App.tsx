@@ -1,87 +1,47 @@
 import React from 'react';
-import { BrowserRouter as Router, Routes, Route, Link, Navigate } from 'react-router-dom';
-import { Layout, Menu } from 'antd';
-import {
-  ShopOutlined,
-  BankOutlined,
-  HomeOutlined,
-  TeamOutlined,
-  LogoutOutlined,
-  AppstoreOutlined,
-} from '@ant-design/icons';
+import { BrowserRouter as Router, Routes, Route, Navigate } from 'react-router-dom';
+import { Layout } from 'antd';
 import { AuthProvider, useAuth } from './contexts/AuthContext';
 import Login from './pages/Login';
-import Register from './pages/Register';
-import MallList from './components/mall/MallList';
-import FloorList from './components/floor/FloorList';
-import UnitList from './components/unit/UnitList';
-import TenantList from './components/tenant/TenantList';
-import BasicReports from './components/reports/BasicReports';
-import Sidebar from './components/Sidebar';
-import RoleAndPermission from './components/role/RoleAndPermission';
-import StickyHeader from './components/StickyHeader';
+import Dashboard from './pages/Dashboard';
 import AccountSettings from './pages/AccountSettings';
 import ChangePassword from './pages/ChangePassword';
+import MallManagement from './pages/MallManagement';
+import FloorManagement from './pages/FloorManagement';
+import UnitManagement from './pages/UnitManagement';
+import TenantManagement from './pages/TenantManagement';
+import ReportManagement from './pages/ReportManagement';
+import UserManagement from './pages/UserManagement';
+import RoleManagement from './pages/RoleManagement';
+import Sidebar from './components/Sidebar';
+import StickyHeader from './components/StickyHeader';
+import ResetPassword from './pages/ResetPassword';
+import ForgotPassword from './pages/ForgotPassword';
 
-const { Header, Content, Sider } = Layout;
+const { Content } = Layout;
 
-const ProtectedRoute: React.FC<{ children: React.ReactNode }> = ({ children }) => {
-  const { isAuthenticated } = useAuth();
-  return isAuthenticated ? <>{children}</> : <Navigate to="/login" />;
-};
+const AppContent: React.FC = () => {
+  const { user } = useAuth();
 
-const AppLayout: React.FC = () => {
-  const { logout } = useAuth();
+  if (!user) {
+    // Don't render anything for protected routes if not authenticated
+    return <Navigate to="/login" replace />;
+  }
 
   return (
     <Layout style={{ minHeight: '100vh' }}>
       <StickyHeader />
-      <Layout>
-        <Sider width={200} style={{ background: '#fff', marginTop: 80 }}>
-          <Menu
-            mode="inline"
-            defaultSelectedKeys={['dashboard']}
-            style={{ height: '100%', borderRight: 0 }}
-            items={[
-              {
-                key: 'dashboard',
-                icon: <AppstoreOutlined />,
-                label: <Link to="/dashboard">Dashboard</Link>,
-              },
-              {
-                key: 'roles',
-                icon: <TeamOutlined />,
-                label: <Link to="/roles">Role and Permissions</Link>,
-              },
-              {
-                key: 'malls',
-                icon: <ShopOutlined />,
-                label: <Link to="/malls">Mall Management</Link>,
-              },
-              {
-                key: 'floors',
-                icon: <BankOutlined />,
-                label: <Link to="/floors">Floor Management</Link>,
-              },
-              {
-                key: 'units',
-                icon: <HomeOutlined />,
-                label: <Link to="/units">Unit Management</Link>,
-              },
-              {
-                key: 'tenants',
-                icon: <TeamOutlined />,
-                label: <Link to="/tenants">Tenants</Link>,
-              },
-              {
-                key: 'reports',
-                icon: <HomeOutlined />,
-                label: <Link to="/reports">Reports</Link>,
-              },
-            ]}
-          />
-        </Sider>
-        <Layout style={{ padding: '24px', paddingTop: 104 }}>
+      <Sidebar />
+      <div
+        style={{
+          marginLeft: 240, // width of the fixed sidebar
+          height: '100vh',
+          overflowY: 'auto',
+          width: 'calc(100% - 240px)',
+          background: '#fff',
+        }}
+      >
+        <div style={{ padding: '24px', paddingTop: 104 }}>
           <Content
             style={{
               padding: 24,
@@ -91,56 +51,22 @@ const AppLayout: React.FC = () => {
             }}
           >
             <Routes>
-              <Route path="/dashboard" element={
-                <ProtectedRoute>
-                  <div style={{ fontSize: 32, fontWeight: 700 }}>Welcome to the Dashboard</div>
-                </ProtectedRoute>
-              } />
-              <Route path="/malls" element={
-                <ProtectedRoute>
-                  <MallList />
-                </ProtectedRoute>
-              } />
-              <Route path="/floors" element={
-                <ProtectedRoute>
-                  <FloorList />
-                </ProtectedRoute>
-              } />
-              <Route path="/units" element={
-                <ProtectedRoute>
-                  <UnitList />
-                </ProtectedRoute>
-              } />
-              <Route path="/tenants" element={
-                <ProtectedRoute>
-                  <TenantList />
-                </ProtectedRoute>
-              } />
-              <Route path="/reports" element={
-                <ProtectedRoute>
-                  <BasicReports />
-                </ProtectedRoute>
-              } />
-              <Route path="/roles" element={
-                <ProtectedRoute>
-                  <RoleAndPermission />
-                </ProtectedRoute>
-              } />
-              <Route path="/settings" element={
-                <ProtectedRoute>
-                  <AccountSettings />
-                </ProtectedRoute>
-              } />
-              <Route path="/settings/change-password" element={
-                <ProtectedRoute>
-                  <ChangePassword />
-                </ProtectedRoute>
-              } />
-              <Route path="/" element={<Navigate to="/dashboard" />} />
+              <Route path="/" element={<Navigate to="/dashboard" replace />} />
+              <Route path="/dashboard" element={<Dashboard />} />
+              <Route path="/settings" element={<AccountSettings />} />
+              <Route path="/settings/change-password" element={<ChangePassword />} />
+              <Route path="/malls" element={<MallManagement />} />
+              <Route path="/floors" element={<FloorManagement />} />
+              <Route path="/units" element={<UnitManagement />} />
+              <Route path="/tenants" element={<TenantManagement />} />
+              <Route path="/reports" element={<ReportManagement />} />
+              <Route path="/users" element={<UserManagement />} />
+              <Route path="/roles" element={<RoleManagement />} />
+              <Route path="/reset-password" element={<ResetPassword />} />
             </Routes>
           </Content>
-        </Layout>
-      </Layout>
+        </div>
+      </div>
     </Layout>
   );
 };
@@ -150,9 +76,11 @@ const App: React.FC = () => {
     <Router>
       <AuthProvider>
         <Routes>
+          {/* Public routes */}
           <Route path="/login" element={<Login />} />
-          <Route path="/register" element={<Register />} />
-          <Route path="/*" element={<AppLayout />} />
+          <Route path="/forgot-password" element={<ForgotPassword />} />
+          {/* Protected routes */}
+          <Route path="/*" element={<AppContent />} />
         </Routes>
       </AuthProvider>
     </Router>

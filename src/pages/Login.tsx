@@ -1,7 +1,7 @@
 import React from 'react';
 import { Form, Input, Button, Card, Typography } from 'antd';
 import { UserOutlined, LockOutlined } from '@ant-design/icons';
-import { Link } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 import { useAuth } from '../contexts/AuthContext';
 import type { LoginData } from '../services/auth.service';
 
@@ -9,6 +9,8 @@ const { Title } = Typography;
 
 const Login: React.FC = () => {
   const { login } = useAuth();
+  const [form] = Form.useForm();
+  const navigate = useNavigate();
 
   const onFinish = async (values: LoginData) => {
     try {
@@ -16,6 +18,11 @@ const Login: React.FC = () => {
     } catch (error) {
       console.error('Login failed:', error);
     }
+  };
+
+  const handleResetClick = () => {
+    form.resetFields();
+    navigate('/forgot-password');
   };
 
   return (
@@ -31,6 +38,7 @@ const Login: React.FC = () => {
           Mall Management System
         </Title>
         <Form
+          form={form}
           name="login"
           initialValues={{ remember: true }}
           onFinish={onFinish}
@@ -68,7 +76,7 @@ const Login: React.FC = () => {
           </Form.Item>
 
           <div style={{ textAlign: 'center' }}>
-            <Link to="/register">Don't have an account? Register here</Link>
+            <a onClick={handleResetClick} style={{ cursor: 'pointer' }}>Forgot Password? Reset</a>
           </div>
         </Form>
       </Card>

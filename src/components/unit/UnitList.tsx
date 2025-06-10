@@ -18,13 +18,14 @@ import {
   Popconfirm,
   Tag,
 } from 'antd';
-import { PlusOutlined, EditOutlined, DeleteOutlined, UserAddOutlined, UserDeleteOutlined } from '@ant-design/icons';
+import { PlusOutlined } from '@ant-design/icons';
+import api from '../../services/api';
 
 const UnitList: React.FC = () => {
   const [units, setUnits] = useState<Unit[]>([]);
   const [floors, setFloors] = useState<Floor[]>([]);
   const [tenants, setTenants] = useState<Tenant[]>([]);
-  const [loading, setLoading] = useState(false);
+  const [loading] = useState(false);
   const [modalVisible, setModalVisible] = useState(false);
   const [assignModalVisible, setAssignModalVisible] = useState(false);
   const [editingUnit, setEditingUnit] = useState<Unit | null>(null);
@@ -188,21 +189,21 @@ const UnitList: React.FC = () => {
       render: (_: any, record: Unit) => (
         <Space>
           <Button
-            icon={<EditOutlined />}
+            type="link"
             onClick={() => handleEdit(record)}
           >
             Edit
           </Button>
           {record.status === 'VACANT' ? (
             <Button
-              icon={<UserAddOutlined />}
+              type="link"
               onClick={() => handleAssignTenant(record)}
             >
               Assign Tenant
             </Button>
           ) : record.tenantId ? (
             <Button
-              icon={<UserDeleteOutlined />}
+              type="link"
               onClick={() => handleRemoveTenant(record)}
             >
               Remove Tenant
@@ -214,7 +215,10 @@ const UnitList: React.FC = () => {
             okText="Yes"
             cancelText="No"
           >
-            <Button icon={<DeleteOutlined />} danger>
+            <Button
+              type="link"
+              danger
+            >
               Delete
             </Button>
           </Popconfirm>

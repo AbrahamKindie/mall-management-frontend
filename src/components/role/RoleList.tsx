@@ -79,12 +79,14 @@ const RoleList: React.FC = () => {
       if (editingRole) {
         await roleService.update(editingRole.id, {
           name: values.name,
+          status: values.status,
           permissions: selectedPerms.map((id: number) => ({ id })),
         });
         message.success('Role updated');
       } else {
         await roleService.create({
           name: values.name,
+          status: values.status,
           permissions: selectedPerms.map((id: number) => ({ id })),
         });
         message.success('Role created');
@@ -361,11 +363,23 @@ const RoleList: React.FC = () => {
         destroyOnHidden
         width={600}
       >
-        <Form form={form} layout="vertical" onFinish={handleSubmit} initialValues={{ name: '' }}>
+        <Form
+          form={form}
+          layout="vertical"
+          onFinish={handleSubmit}
+          initialValues={{
+            name: editingRole?.name || '',
+            status: editingRole?.status || 'ACTIVE',
+            permissions: selectedPerms,
+          }}
+        >
           <Form.Item name="name" label="Role Name" rules={[{ required: true, message: 'Role name is required' }]}> 
             <Input autoComplete="off" onChange={() => form.validateFields(['name'])} />
           </Form.Item>
-          <Form.Item name="permissions" noStyle rules={[{ validator: (_, value) => (value && value.length > 0 ? Promise.resolve() : Promise.reject(new Error('Role must have at least one permission.'))) }]}>
+          <Form.Item name="status" label="Status" rules={[{ required: true }]}> 
+            <Select options={ROLE_STATUS} />
+          </Form.Item>
+          <Form.Item name="permissions" noStyle rules={[{ validator: (_, value) => (value && value.length > 0 ? Promise.resolve() : Promise.reject(new Error('Role must have at least one permission.'))) }]}> 
             <Input type="hidden" />
           </Form.Item>
           <div style={{ marginBottom: 16 }}>
@@ -379,7 +393,7 @@ const RoleList: React.FC = () => {
                 ) : null;
               }}
             </Form.Item>
-            <div style={{ maxHeight: 300, overflowY: 'auto', paddingRight: 8 }}>
+            <div style={{ maxHeight: 300, overflowY: 'auto', paddingRight: 8, border: '1px solid #f0f0f0', borderRadius: 8, padding: 8 }}>
               <Collapse
                 bordered={false}
                 defaultActiveKey={Object.keys(groupedByModule)}
@@ -442,10 +456,10 @@ const RoleList: React.FC = () => {
               />
             </div>
           </div>
-          <Space>
+          <div style={{ display: 'flex', justifyContent: 'center', gap: 16, marginTop: 24 }}>
             <Button onClick={() => setModalVisible(false)}>Cancel</Button>
             <Button type="primary" htmlType="submit" loading={submitLoading}>{editingRole ? 'Update' : 'Create'} Role</Button>
-          </Space>
+          </div>
         </Form>
       </Modal>
     </div>

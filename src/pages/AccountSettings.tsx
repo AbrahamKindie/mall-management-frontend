@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { Tabs, Form, Input, Button, Avatar, Upload, message, Alert } from 'antd';
+import { Tabs, Form, Input, Button, Avatar, Upload, Alert } from 'antd';
 import { UserOutlined, CameraOutlined } from '@ant-design/icons';
 import { useAuth } from '../contexts/AuthContext';
 import { useNavigate } from 'react-router-dom';
@@ -18,8 +18,6 @@ const AccountSettings: React.FC = () => {
   const isAdminUser = user && 'fullName' in user;
   const defaultFullName = isAdminUser
     ? (user as any)?.fullName || ''
-    : user?.profile
-    ? `${user.profile.firstName || ''} ${user.profile.lastName || ''}`.trim()
     : user?.email?.split('@')[0] || '';
 
   useEffect(() => {
@@ -27,10 +25,9 @@ const AccountSettings: React.FC = () => {
       form.setFieldsValue({
         fullName: defaultFullName,
         email: user.email,
-        phone: isAdminUser ? (user as any)?.phoneNumber || '' : user.profile?.phone || '',
+        phone: isAdminUser ? (user as any)?.phoneNumber || '' : '',
         username: isAdminUser ? (user as any)?.username || '' : user.email?.split('@')[0] || '',
       });
-
       const profileImg = isAdminUser ? (user as any).profileImage : undefined;
       setAvatarUrl(profileImg ? (profileImg.startsWith('/api/') ? profileImg : `/api${profileImg}`) : '/avatar.png');
     }
@@ -70,7 +67,7 @@ const AccountSettings: React.FC = () => {
     const changed: Record<string, any> = {};
     if (values.fullName !== defaultFullName) changed.fullName = values.fullName;
     if (values.email !== user?.email) changed.email = values.email;
-    const oldPhone = isAdminUser ? (user as any)?.phoneNumber || '' : user?.profile?.phone || '';
+    const oldPhone = isAdminUser ? (user as any)?.phoneNumber || '' : '';
     const oldUsername = isAdminUser ? (user as any)?.username || '' : user?.email?.split('@')[0] || '';
     if (values.phone !== oldPhone) changed.phoneNumber = values.phone;
     if (values.username !== oldUsername) changed.username = values.username;
@@ -93,16 +90,18 @@ const AccountSettings: React.FC = () => {
   };
 
   return (
-    <div style={{ maxWidth: 1100, margin: '40px auto', padding: 0 }}>
+    <div style={{ maxWidth: 1100, margin: '20px auto', padding: 0 }}>
       <h2 style={{ fontWeight: 700, fontSize: 32 }}>Settings</h2>
-      <div style={{ color: '#A0A0A0', fontSize: 17, marginBottom: 32 }}>
+      <div style={{ color: '#A0A0A0', fontSize: 17, marginBottom: 15 }}>
         Manage your Account settings and preference
       </div>
 
-      <Tabs defaultActiveKey="account" style={{ marginBottom: 32 }}>
-        <TabPane tab={<span><UserOutlined /> Account Setting</span>} key="account" />
-        <TabPane tab={<span><CameraOutlined /> Notification Setting</span>} key="notification" />
-      </Tabs>
+      <div style={{ position: 'sticky', top: 0, zIndex: 10, background: '#fff' }}>
+        <Tabs defaultActiveKey="account" style={{ marginBottom: 32 }}>
+          <TabPane tab={<span><UserOutlined /> Account Setting</span>} key="account" />
+          <TabPane tab={<span><CameraOutlined /> Notification Setting</span>} key="notification" />
+        </Tabs>
+      </div>
 
       <div style={{ padding: 0 }}>
         {alert && (
